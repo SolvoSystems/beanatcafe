@@ -15,19 +15,11 @@ function ArrowIcon() {
   );
 }
 
-const NAV = [
-  { to: '/', label: 'Home', end: true },
-];
-
 export default function Layout() {
   const { settings, cart } = useAppState();
   const count = cartCount(cart);
   const [open, setOpen] = useState(false);
   const wa = whatsappHref(settings.whatsapp, 'Hi Bean@Cafe, I have a question about my order.');
-
-  const link = ({ isActive }) =>
-    'px-4 py-2 rounded-full font-bold text-sm transition ' +
-    (isActive ? 'bg-pale/70 text-ink' : 'text-muted hover:text-ink hover:bg-pale/30');
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -39,9 +31,6 @@ export default function Layout() {
 
           {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-1">
-            {NAV.map((n) => (
-              <NavLink key={n.to} to={n.to} end={n.end} className={link}>{n.label}</NavLink>
-            ))}
             <NavLink to="/menu" className="px-4 py-2 rounded-full font-bold text-sm bg-apricot text-ink hover:bg-apricot/80 transition">Order Now</NavLink>
             <NavLink
               to="/checkout"
@@ -88,7 +77,6 @@ export default function Layout() {
         {/* Mobile menu */}
         {open && (
           <nav className="md:hidden border-t border-pale/50 bg-cream px-4 py-3 flex flex-col gap-1">
-            <NavLink to="/" end className="rounded-xl px-4 py-3 font-bold" onClick={() => setOpen(false)}>Home</NavLink>
             <NavLink to="/menu" className="rounded-xl px-4 py-3 font-bold bg-apricot text-ink" onClick={() => setOpen(false)}>Order Now</NavLink>
             <NavLink to="/admin" className="rounded-xl px-4 py-3 font-bold bg-sage text-white" onClick={() => setOpen(false)}>Admin</NavLink>
           </nav>
