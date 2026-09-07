@@ -1,0 +1,107 @@
+@import "tailwindcss";
+
+@theme {
+  --color-apricot: #F3A768;
+  --color-sage: #8E9E71;
+  --color-pale: #CDD3AC;
+  --color-cream: #FAF8F5;
+  --color-ink: #2D3748;
+  --color-charcoal: #1F2937;
+  --color-muted: #64708A;
+  --font-sans: "Nunito", "Segoe UI", system-ui, sans-serif;
+  --shadow-soft: 0 8px 24px rgba(45, 55, 72, 0.10);
+  --radius-card: 1.125rem;
+}
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  body { @apply bg-cream text-ink font-sans antialiased; }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 font-bold transition cursor-pointer select-none bg-apricot text-ink shadow-[0_10px_25px_-10px_rgba(243,167,104,0.8)] hover:-translate-y-0.5 hover:shadow-xl hover:shadow-apricot/30;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 font-bold transition cursor-pointer select-none bg-white text-ink border border-pale hover:bg-pale/40;
+  }
+  .btn-wa {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 font-bold transition cursor-pointer select-none bg-[#25D366] text-white hover:-translate-y-0.5 hover:shadow-xl;
+  }
+  .btn-dark {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 font-bold transition cursor-pointer select-none bg-ink text-white hover:opacity-90;
+  }
+  .btn-light {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 font-bold transition cursor-pointer select-none bg-white text-ink hover:-translate-y-0.5 hover:shadow-lg;
+  }
+  .btn-add {
+    @apply inline-flex items-center gap-1.5 rounded-full px-4 py-2 font-extrabold text-sm transition cursor-pointer select-none bg-apricot text-ink shadow-[0_8px_20px_-6px_rgba(243,167,104,0.8)] hover:shadow-[0_10px_26px_-6px_rgba(243,167,104,0.9)] active:scale-90;
+  }
+  .btn-add-sage {
+    @apply inline-flex items-center gap-1.5 rounded-full px-4 py-2 font-extrabold text-sm transition cursor-pointer select-none bg-sage text-white shadow-[0_8px_20px_-6px_rgba(142,158,113,0.8)] hover:shadow-[0_10px_26px_-6px_rgba(142,158,113,0.9)] active:scale-90;
+  }
+  .qty-btn {
+    @apply w-9 h-9 rounded-full bg-pale font-extrabold text-ink transition cursor-pointer select-none hover:bg-pale/60 active:scale-90;
+  }
+
+  .card { @apply bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300; }
+  .input {
+    @apply w-full rounded-xl border border-pale bg-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-apricot;
+  }
+  .label { @apply block font-bold mb-1 text-sm; }
+  .pill { @apply inline-block rounded-full px-3 py-0.5 text-xs font-bold; }
+
+  /* Eyebrow micro-label — uppercase reserved for tiny tags only */
+  .eyebrow { @apply text-xs font-extrabold uppercase tracking-[0.18em] text-sage; }
+
+  /* Display headline */
+  .display { @apply font-extrabold leading-[1.05] tracking-tight text-ink; }
+
+  /* Tinted category chip (same-hue 10% tint like Munch) */
+  .chip {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-extrabold uppercase tracking-wide;
+  }
+
+  /* Circular add / arrow button */
+  .circle-btn {
+    @apply grid place-items-center rounded-full shrink-0 transition cursor-pointer select-none bg-ink text-white hover:bg-apricot hover:text-ink;
+  }
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { scrollbar-width: none; }
+  .stripe-pale {
+    background-image: repeating-linear-gradient(45deg, rgba(141, 158, 113, 0.10) 0 12px, transparent 12px 24px);
+  }
+}
+
+/* ---- motion ---- */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 32s linear infinite;
+}
+
+@keyframes pop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+.animate-pop { animation: pop 0.3s ease; }
+
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal-in { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation: none; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+}
