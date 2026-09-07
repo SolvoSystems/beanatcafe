@@ -44,7 +44,6 @@ export default function Layout() {
               <NavLink key={n.to} to={n.to} end={n.end} className={link}>{n.label}</NavLink>
             ))}
             <a className="px-4 py-2 rounded-full font-bold text-sm text-muted hover:text-ink hover:bg-pale/30 transition" href={wa} target="_blank" rel="noreferrer">Order Now</a>
-            <NavLink to="/admin" className="px-4 py-2 rounded-full font-bold text-sm bg-sage text-white hover:bg-sage/80 transition">Admin</NavLink>
             <NavLink
               to="/checkout"
               className="relative flex items-center gap-2 px-4 py-2 rounded-full bg-ink text-white font-bold text-sm hover:bg-sage transition"
@@ -57,6 +56,7 @@ export default function Layout() {
                 <span className="min-w-5 h-5 px-1 rounded-full bg-apricot text-ink grid place-items-center text-xs font-extrabold">{count}</span>
               )}
             </NavLink>
+            <NavLink to="/admin" className="px-4 py-2 rounded-full font-bold text-sm bg-sage text-white hover:bg-sage/80 transition">Admin</NavLink>
           </nav>
 
           {/* Mobile: cart + burger */}
