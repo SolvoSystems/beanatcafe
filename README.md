@@ -14,7 +14,7 @@ npm run dev
 Open the printed URL (default `http://localhost:5173`).
 
 - Customer menu: `/`
-- Admin dashboard: `/admin` (passcode: `bean12345` — change in `src/lib/store.js` → `adminPassword`)
+- Admin dashboard: `/admin` (passcode: `cafeat5588` — change in `src/lib/store.js` → `adminPassword`)
 
 > Note: the Yoco Pay-now button needs the serverless function, which only runs on
 > Netlify (or locally via `npx netlify dev`). Under plain `npm run dev` it will show

@@ -32,7 +32,7 @@ export const DEFAULT_SETTINGS = {
   ],
   deliveryFrom: 38,
   activeMonth: 'September 2026',
-  adminPassword: 'bean12345',
+  adminPassword: 'cafeat5588',
   yocoMode: 'link', // 'link' | 'webhook' (webhook needs a server; see lib/yoco.js)
   yocoApiKey: '',
 };
