@@ -36,6 +36,33 @@ export function addDaysYmd(ymd, days) {
   return d.toISOString().slice(0, 10);
 }
 
+/* ---- local (device timezone) date helpers, used for ordering cut-offs ---- */
+
+export function todayLocalYmd() {
+  const d = new Date();
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  return `${d.getFullYear()}-${mm}-${dd}`;
+}
+
+export function addDaysLocal(ymd, days) {
+  const d = new Date(ymd + 'T00:00:00');
+  d.setDate(d.getDate() + days);
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  return `${d.getFullYear()}-${mm}-${dd}`;
+}
+
+export function isAfterCutoff(hour = 12) {
+  const d = new Date();
+  return d.getHours() * 60 + d.getMinutes() >= hour * 60;
+}
+
+export function nextDeliveryDate(hour = 12) {
+  const today = todayLocalYmd();
+  return isAfterCutoff(hour) ? addDaysLocal(today, 1) : today;
+}
+
 export function whatsappHref(number, text) {
   const digits = number.replace(/\D/g, '');
   return `https://wa.me/27${digits.replace(/^27/, '').replace(/^0/, '')}?text=${encodeURIComponent(text)}`;

@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAppState, placeOrder, clearCart } from '../lib/store.js';
-import { formatPrice, prettyDate, todayYmd, addDaysYmd } from '../lib/format.js';
+import { formatPrice, prettyDate, todayLocalYmd, addDaysLocal, isAfterCutoff, nextDeliveryDate } from '../lib/format.js';
+
+const CUTOFF_HOUR = 12;
 
 export default function CheckoutPage() {
   const { settings, menu, cart } = useAppState();
@@ -11,13 +13,14 @@ export default function CheckoutPage() {
     mobile: '',
     email: '',
     branch: settings.branches[0] || '',
-    deliveryDate: addDaysYmd(todayYmd(), 1),
+    deliveryDate: addDaysLocal(todayLocalYmd(), 1),
     instructions: '',
     notes: '',
   });
   const [addons, setAddons] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [cutoffNotice, setCutoffNotice] = useState('');
 
   const lineItems = Object.entries(cart)
     .map(([id, qty]) => ({ item: menu.find((m) => m.id === id), qty }))
@@ -32,6 +35,20 @@ export default function CheckoutPage() {
 
   const set = (k) => (e) => setForm({ ...form, [k]: e.target.value });
 
+  const setDate = (e) => {
+    const val = e.target.value;
+    setCutoffNotice('');
+    if (val === todayLocalYmd() && isAfterCutoff(CUTOFF_HOUR)) {
+      const bumped = nextDeliveryDate(CUTOFF_HOUR);
+      setForm({ ...form, deliveryDate: bumped });
+      setCutoffNotice(`It's after ${CUTOFF_HOUR}:00, so same-day is no longer available — your order is set for ${prettyDate(bumped)}.`);
+      return;
+    }
+    setForm({ ...form, deliveryDate: val });
+  };
+
+  const minDate = isAfterCutoff(CUTOFF_HOUR) ? nextDeliveryDate(CUTOFF_HOUR) : todayLocalYmd();
+
   if (!lineItems.length) {
     return (
       <div className="max-w-xl mx-auto px-4 py-16 text-center">
@@ -45,7 +62,13 @@ export default function CheckoutPage() {
   function submit(e) {
     e.preventDefault();
     setError('');
-    if (!form.name.trim() || !form.mobile.trim() || !form.branch || !form.deliveryDate) {
+    let deliveryDate = form.deliveryDate;
+    if (deliveryDate === todayLocalYmd() && isAfterCutoff(CUTOFF_HOUR)) {
+      deliveryDate = nextDeliveryDate(CUTOFF_HOUR);
+      setCutoffNotice(`It's after ${CUTOFF_HOUR}:00 — your order has been set for ${prettyDate(deliveryDate)}.`);
+      setForm({ ...form, deliveryDate });
+    }
+    if (!form.name.trim() || !form.mobile.trim() || !form.branch || !deliveryDate) {
       setError('Please fill in your name, mobile, branch and delivery date.');
       return;
     }
@@ -55,7 +78,7 @@ export default function CheckoutPage() {
       mobile: form.mobile.trim(),
       email: form.email.trim(),
       branch: form.branch,
-      deliveryDate: form.deliveryDate,
+      deliveryDate,
       instructions: form.instructions.trim() + (form.notes.trim() ? `\n\nNotes: ${form.notes.trim()}` : ''),
       items: lineItems.map((x) => ({
         id: x.item.id,
@@ -146,7 +169,11 @@ export default function CheckoutPage() {
           </div>
           <div>
             <label className="label" htmlFor="deliveryDate">Delivery date</label>
-            <input id="deliveryDate" className="input" type="date" min={todayYmd()} value={form.deliveryDate} onChange={set('deliveryDate')} required />
+            <input id="deliveryDate" className="input" type="date" min={minDate} value={form.deliveryDate} onChange={setDate} required />
+            <p className="text-xs text-muted mt-1">Order by 12:00 for same-day delivery/collection. After 12:00, orders go to the next day.</p>
+            {cutoffNotice && (
+              <p className="text-sm font-bold text-sage mt-1 bg-pale/40 rounded-xl px-3 py-2">{cutoffNotice}</p>
+            )}
           </div>
           <div>
             <label className="label" htmlFor="instructions">Delivery address / instructions</label>
